@@ -5,7 +5,6 @@ import com.jayway.jsonpath.PathNotFoundException;
 import org.embulk.filter.json_csv2arrayofobjects.JsonCsv2arrayofobjectsFilterPlugin.JsonKeyTask;
 import org.embulk.filter.json_csv2arrayofobjects.JsonCsv2arrayofobjectsFilterPlugin.PluginTask;
 import org.embulk.spi.DataException;
-import org.embulk.spi.Exec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,13 +35,18 @@ public class Filter
         String subDelimiter = task.getSubDelimiter().get();
         List<JsonKeyTask> outputKeys = task.getOutputKeys();
         List<Map> l = new ArrayList<Map>();
-        for (String v : val.split(delimiter)) {
-            String[] subvals = v.split(subDelimiter);
+        String[] vals = val.split(delimiter);
+        for (int i = 0; i < vals.length; i++) {
+            String[] subvals = vals[i].split(subDelimiter);
             Map<String, Object> m = new HashMap<String, Object>();
-            for (int i = 0; i < subvals.length; i++) {
-                JsonKeyTask jsonKey = outputKeys.get(i);
+            for (int j = 0; j < subvals.length; j++) {
+                JsonKeyTask jsonKey = outputKeys.get(j);
                 String k = jsonKey.getName();
-                m.put(k, StringCast.cast(subvals[i], jsonKey.getType()));
+                m.put(k, StringCast.cast(subvals[j], jsonKey.getType()));
+            }
+            // add sequence
+            if (task.getSequenceName().isPresent()) {
+                m.put(task.getSequenceName().get(), i);
             }
             l.add(m);
         }

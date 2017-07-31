@@ -123,6 +123,26 @@ public class TestFilter
         assertEquals(expected, got);
     }
 
+    @Test
+    public void explicitSequenceName()
+    {
+        PluginTask task = taskFromYamlString(
+            "type: json_csv2arrayofobjects",
+            "column: json_payload",
+            "key: key",
+            "sequence_name: seq",
+            "output_keys:",
+            "  - {name: name, type: string}",
+            "  - {name: number, type: long}"
+        );
+        Filter filter = new Filter(task);
+        String inputValue = "{\"key\": \"a-1,b-2\"}";
+        filter.doFilter(inputValue);
+        String got = filter.doFilter(inputValue);
+        String expected = "{\"key\":[{\"number\":1,\"name\":\"a\",\"seq\":0},{\"number\":2,\"name\":\"b\",\"seq\":1}]}";
+        assertEquals(expected, got);
+    }
+
     @Test(expected = DataException.class)
     public void invalidKey()
     {

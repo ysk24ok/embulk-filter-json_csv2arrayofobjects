@@ -38,6 +38,10 @@ public class JsonCsv2arrayofobjectsFilterPlugin
         @ConfigDefault("\"-\"")
         public Optional<String> getSubDelimiter();
 
+        @Config("sequence_name")
+        @ConfigDefault("null")
+        public Optional<String> getSequenceName();
+
         @Config("output_keys")
         public List<JsonKeyTask> getOutputKeys();
     }
