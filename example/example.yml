@@ -1,0 +1,31 @@
+in:
+  type: file
+  path_prefix: ./example/example.tsv
+  parser:
+    type: csv
+    charset: UTF-8
+    delimiter: "\t"
+    columns:
+      - {name: name, type: string}
+      - {name: json1, type: json}
+      - {name: json2, type: string}
+filters:
+#  - type: to_json
+  - type: json_csv2arrayofobjects
+    column: json1
+    key: csv1
+    output_keys:
+      - {name: number, type: long}
+      - {name: code, type: string}
+  - type: json_csv2arrayofobjects
+    column: json2
+    key: key.csv2
+    delimiter: "-"
+    sub_delimiter: ":"
+    sequence_name: "seq"
+    output_keys:
+      - {name: decimal, type: double}
+      - {name: code, type: string}
+      - {name: bool, type: boolean}
+out:
+  type: stdout
