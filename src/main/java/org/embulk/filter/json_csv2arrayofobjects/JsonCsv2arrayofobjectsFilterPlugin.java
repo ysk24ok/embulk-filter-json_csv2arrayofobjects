@@ -4,9 +4,11 @@ import com.google.common.base.Optional;
 
 import org.embulk.config.Config;
 import org.embulk.config.ConfigDefault;
+import org.embulk.config.ConfigException;
 import org.embulk.config.ConfigSource;
 import org.embulk.config.Task;
 import org.embulk.config.TaskSource;
+import org.embulk.spi.Column;
 import org.embulk.spi.Exec;
 import org.embulk.spi.FilterPlugin;
 import org.embulk.spi.Page;
@@ -56,17 +58,27 @@ public class JsonCsv2arrayofobjectsFilterPlugin
         public Type getType();
     }
 
-    // TODO: validate項目
-    // delimiterとsubdelimiterは同じではいけない
+    public void validate(PluginTask task, Schema inputSchema)
+    {
+        // throws exception when the column does not exist
+        Column column = inputSchema.lookupColumn(task.getColumn());
+        Type colType = column.getType();
+        // delimiter and sub_delimtier should not be equal
+        String delimiter = task.getDelimiter().get();
+        String subDelimiter = task.getSubDelimiter().get();
+        if (delimiter.equals(subDelimiter)) {
+            String errMsg = "delimiter and sub_delimiter should not be equal";
+            throw new ConfigException(errMsg);
+        }
+    }
 
     @Override
     public void transaction(ConfigSource config, Schema inputSchema,
             FilterPlugin.Control control)
     {
         PluginTask task = config.loadConfig(PluginTask.class);
-
+        validate(task, inputSchema);
         Schema outputSchema = inputSchema;
-
         control.run(task.dump(), outputSchema);
     }
 
