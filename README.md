@@ -1,0 +1,29 @@
+# Json Csv2arrayofobjects filter plugin for Embulk
+
+TODO: Write short description here and build.gradle file.
+
+## Overview
+
+* **Plugin type**: filter
+
+## Configuration
+
+- **option1**: description (integer, required)
+- **option2**: description (string, default: `"myvalue"`)
+- **option3**: description (string, default: `null`)
+
+## Example
+
+```yaml
+filters:
+  - type: json_csv2arrayofobjects
+    option1: example1
+    option2: example2
+```
+
+
+## Build
+
+```
+$ ./gradlew gem  # -t to watch change of files and rebuild continuously
+```
