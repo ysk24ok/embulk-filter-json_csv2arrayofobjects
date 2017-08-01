@@ -86,6 +86,24 @@ public class TestFilter
     }
 
     @Test
+    public void skipEmptyElement()
+    {
+        PluginTask task = taskFromYamlString(
+            "type: json_csv2arrayofobjects",
+            "column: json_payload",
+            "key: key",
+            "output_keys:",
+            "  - {name: name, type: string}",
+            "  - {name: number, type: long}"
+        );
+        Filter filter = new Filter(task);
+        String inputValue = "{\"key\": \",a-1,,,b-2,\"}";
+        String got = filter.doFilter(inputValue);
+        String expected = "{\"key\":[{\"number\":1,\"name\":\"a\"},{\"number\":2,\"name\":\"b\"}]}";
+        assertEquals(expected, got);
+    }
+
+    @Test
     public void explicitDelimiter()
     {
         PluginTask task = taskFromYamlString(

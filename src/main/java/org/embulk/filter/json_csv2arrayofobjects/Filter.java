@@ -37,6 +37,10 @@ public class Filter
         List<Map> l = new ArrayList<Map>();
         String[] vals = val.split(delimiter);
         for (int i = 0; i < vals.length; i++) {
+            // skip empty element
+            if (vals[i].isEmpty()) {
+                continue;
+            }
             String[] subvals = vals[i].split(subDelimiter);
             Map<String, Object> m = new HashMap<String, Object>();
             for (int j = 0; j < subvals.length; j++) {
