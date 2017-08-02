@@ -27,14 +27,23 @@ public class Filter
         try {
             val = JsonPath.parse(json).read(jsonPath);
         }
+        // when json is null or empty
+        catch (IllegalArgumentException ex) {
+            throw new DataException(ex);
+        }
         // when the key does not exist in json
         catch (PathNotFoundException ex) {
             throw new DataException(ex);
         }
+        List<Map> l = new ArrayList<Map>();
+        // TODO: need allow_null_value option?
+        //       if it's set to false, throw exception
+        if (val == null) {
+            return JsonPath.parse(json).set(jsonPath, l).jsonString();
+        }
         String delimiter = task.getDelimiter().get();
         String subDelimiter = task.getSubDelimiter().get();
         List<JsonKeyTask> outputKeys = task.getOutputKeys();
-        List<Map> l = new ArrayList<Map>();
         String[] vals = val.split(delimiter);
         for (int i = 0; i < vals.length; i++) {
             // skip empty element

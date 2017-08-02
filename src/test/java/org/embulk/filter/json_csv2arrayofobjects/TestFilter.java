@@ -86,6 +86,24 @@ public class TestFilter
     }
 
     @Test
+    public void valueIsNull()
+    {
+        PluginTask task = taskFromYamlString(
+            "type: json_csv2arrayofobjects",
+            "column: json_payload",
+            "key: key",
+            "output_keys:",
+            "  - {name: name, type: string}",
+            "  - {name: number, type: double}"
+        );
+        Filter filter = new Filter(task);
+        String inputValue = "{\"key\": null}";
+        String got = filter.doFilter(inputValue);
+        String expected = "{\"key\":[]}";
+        assertEquals(expected, got);
+    }
+
+    @Test
     public void skipEmptyElement()
     {
         PluginTask task = taskFromYamlString(
@@ -97,9 +115,18 @@ public class TestFilter
             "  - {name: number, type: long}"
         );
         Filter filter = new Filter(task);
-        String inputValue = "{\"key\": \",a-1,,,b-2,\"}";
-        String got = filter.doFilter(inputValue);
-        String expected = "{\"key\":[{\"number\":1,\"name\":\"a\"},{\"number\":2,\"name\":\"b\"}]}";
+        String inputValue = null;
+        String got = null;
+        String expected = null;
+        // value is empty
+        inputValue = "{\"key\": \"\"}";
+        got = filter.doFilter(inputValue);
+        expected = "{\"key\":[]}";
+        assertEquals(expected, got);
+        // value contains empty element
+        inputValue = "{\"key\": \",a-1,,,b-2,\"}";
+        got = filter.doFilter(inputValue);
+        expected = "{\"key\":[{\"number\":1,\"name\":\"a\"},{\"number\":2,\"name\":\"b\"}]}";
         assertEquals(expected, got);
     }
 
@@ -159,6 +186,38 @@ public class TestFilter
         String got = filter.doFilter(inputValue);
         String expected = "{\"key\":[{\"number\":1,\"name\":\"a\",\"seq\":0},{\"number\":2,\"name\":\"b\",\"seq\":1}]}";
         assertEquals(expected, got);
+    }
+
+    @Test(expected = DataException.class)
+    public void inputValueIsNull()
+    {
+        PluginTask task = taskFromYamlString(
+            "type: json_csv2arrayofobjects",
+            "column: json_payload",
+            "key: key",
+            "output_keys:",
+            "  - {name: name, type: string}",
+            "  - {name: number, type: double}"
+        );
+        Filter filter = new Filter(task);
+        String inputValue = null;
+        filter.doFilter(inputValue);
+    }
+
+    @Test(expected = DataException.class)
+    public void inputValueIsEmpty()
+    {
+        PluginTask task = taskFromYamlString(
+            "type: json_csv2arrayofobjects",
+            "column: json_payload",
+            "key: key",
+            "output_keys:",
+            "  - {name: name, type: string}",
+            "  - {name: number, type: double}"
+        );
+        Filter filter = new Filter(task);
+        String inputValue = null;
+        filter.doFilter(inputValue);
     }
 
     @Test(expected = DataException.class)
