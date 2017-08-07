@@ -79,6 +79,10 @@ output:
 {"key":{"csv2":[{"code":"A","bool":true,"decimal":50.0,"seq":0},{"code":"B","bool":true,"decimal":51.5,"seq":1},{"code":"C","bool":true,"decimal":52.0,"seq":2}]}}
 ```
 
+## Thanks
+
+Implementation of [StringCast.java](https://github.com/ysk24ok/embulk-filter-json_csv2arrayofobjects/blob/master/src/main/java/org/embulk/filter/json_csv2arrayofobjects/StringCast.java) use that of [embulk-filter-typecast](https://github.com/sonots/embulk-filter-typecast) as a reference.
+
 
 ## Build
 
