@@ -79,10 +79,10 @@ Gem::Specification.new do |spec|
   spec.version       = "${project.version}"
   spec.authors       = ["Yusuke NISHIOKA"]
   spec.summary       = %[Json Csv2arrayofobjects filter plugin for Embulk]
-  spec.description   = %[Json Csv2arrayofobjects]
+  spec.description   = %[An Embulk filter plugin to convert csv in JSON to array of objects]
   spec.email         = ["yusuke.nishioka.0713@gmail.com"]
   spec.licenses      = ["MIT"]
-  # TODO set this: spec.homepage      = "https://github.com/yusuke.nishioka.0713/embulk-filter-json_csv2arrayofobjects"
+  spec.homepage      = "https://github.com/ysk24ok/embulk-filter-json_csv2arrayofobjects"
 
   spec.files         = `git ls-files`.split("\n") + Dir["classpath/*.jar"]
   spec.test_files    = spec.files.grep(%r"^(test|spec)/")
